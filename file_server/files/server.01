@@ -2,7 +2,7 @@ $ cat /etc/centos-release
 CentOS release 6.2 (Final)
 
 $ lscpu
-Architecture:          x86_64
+Architecture:          x86_6
 CPU op-mode(s):        32-bit, 64-bit
 CPU(s):                8
 Thread(s) per core:    2

@@ -21,16 +21,17 @@ def index(request):
     return render_to_response('index.html')
 
 
-def landing(request, num=None):
+def landing(request):
     # Реализуйте дополнительное отображение по шаблону app/landing_alternate.html
     # в зависимости от GET параметра ab-test-arg
     # который может принимать значения original и test
     # Так же реализуйте логику подсчета количества показов
     land = request.GET.get('ab-test-arg')
-    if land == 'original/':
+    print(land)
+    if land == 'original':
         counter_show['original'] += 1
         res = render_to_response('landing.html')
-    elif land == 'test/':
+    elif land == 'test':
         counter_show['test'] += 1
         res = render_to_response('landing_alternate.html')
     print('show:', counter_show)
@@ -42,8 +43,14 @@ def stats(request):
     # Чтобы отличить с какой версии лендинга был переход
     # проверяйте GET параметр marker который может принимать значения test и original
     # Для вывода результат передайте в следующем формате:
-    result_original = counter_click['original'] / counter_show['original']
-    result_test = counter_click['test'] / counter_show['test']
+    if counter_show['original'] != 0:
+        result_original = counter_click['original'] / counter_show['original']
+    else:
+        result_original = 0
+    if counter_show['test'] != 0:
+        result_test = counter_click['test'] / counter_show['test']
+    else:
+        result_test = 0
     return render_to_response('stats.html', context={
         'test_conversion': result_test,
         'original_conversion': result_original,

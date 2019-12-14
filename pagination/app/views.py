@@ -21,18 +21,19 @@ def bus_stations(request):
         bus_stations_paginator = Paginator(bus_stations_full_list, 10)
         current_page = request.GET.get('page', 1)
         bus_stations_list = bus_stations_paginator.get_page(current_page)
-        prev_page_num, next_page_num = None, None
+        context = {
+            'bus_stations': bus_stations_list,
+            'current_page': bus_stations_list.number
+        }
         if bus_stations_list.has_previous():
             prev_page_num = bus_stations_list.previous_page_number()
+            prev_page = {'page': prev_page_num}
+            prev_page_url = f'?{urlencode(prev_page)}'
+            context['prev_page_url'] = prev_page_url
         if bus_stations_list.has_next():
             next_page_num = bus_stations_list.next_page_number()
-        prev_page = {'page': prev_page_num}
-        next_page = {'page': next_page_num}
-        next_page_url = urlencode(next_page)
-        prev_page_url = urlencode(prev_page)
+            next_page = {'page': next_page_num}
+            next_page_url = f'?{urlencode(next_page)}'
+            context['next_page_url'] = next_page_url
 
-    return render_to_response('index.html', context={
-        'bus_stations': bus_stations_list,
-        'current_page': bus_stations_list.number,
-        'prev_page_url': f'?{prev_page_url}',
-        'next_page_url': f'?{next_page_url}'})
+    return render_to_response('index.html', context)
